@@ -113,8 +113,9 @@ function App() {
         </div>
       </div>
       <footer className="footer">
-        <p>Created by John Doe</p>
-        <p>© 2024 Water Monitoring System</p>
+        <p>Bonuedie Ezra</p>
+        <p>Boamah Samuel</p>
+        <p>© 2024 IoT Irrigation Dam Monitoring System</p>
       </footer>
     </div>
   );
