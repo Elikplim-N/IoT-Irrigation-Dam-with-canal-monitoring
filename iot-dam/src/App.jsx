@@ -42,6 +42,15 @@ function App() {
     <div className="app">
       <div className="container">
         <h1 className="text-center">IoT Irrigation Dam Monitoring System </h1>
+        <ul>
+
+          <li>Threshold for turbidity = 3</li>
+          <li>Max Threshold for canal = 80</li>
+          <li>Min Threshold for canal = 60</li>
+          <li>Max Threshold for dam = 95</li>
+          <li>Min Threshold for dam = 60</li>
+          
+        </ul>
         <div className="row">
           {/* Temperature Sensor */}
           <div className="col-md-3">

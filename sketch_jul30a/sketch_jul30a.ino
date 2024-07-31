@@ -47,7 +47,6 @@ void setup() {
   
   // Start the serial communication
   Serial.begin(115200);
-
   // Start the DS18B20 sensor
   sensors.begin();
 }
