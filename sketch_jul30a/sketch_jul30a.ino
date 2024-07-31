@@ -15,7 +15,7 @@ const int buzzer = 13; // buzzer pin
 
 // Threshold definitions
 const int turbidityThreshold = 3000; // Example threshold for turbidity in NTU
-const float tankLevelHighThreshold = 90.0;
+const float tankLevelHighThreshold = 95.0;
 const float tankLevelLowThreshold = 60.0;
 const float canalLevelHighThreshold = 80.0;
 const float canalLevelLowThreshold = 60.0;
@@ -31,7 +31,7 @@ const char* serverUrl = "https://api.waziup.io/api/v2/devices/IoT_Dam/sensors/";
 int mapToNTU(int sensorValue) {
   // Map the analog reading (0-1023) to NTU (10-5000)
   int ntu = map(sensorValue, 0, 1023, 10, 5000);
-  return ntu;
+  return ntu/10000;
 }
 
 void setup() {
@@ -109,7 +109,7 @@ void sendDataToSensor(String sensorId, float value) {
 
 void enterDeepSleep() {
   // Configure the wake-up source as the timer
-  esp_sleep_enable_timer_wakeup(0.5 * 60 * 1000000); // 0.5 minutes
+  esp_sleep_enable_timer_wakeup(60 * 1000000); // 1 SEC
   esp_deep_sleep_start();
 }
 
@@ -171,7 +171,7 @@ void loop() {
   if (cLevelPercent > canalLevelHighThreshold || cLevelPercent < canalLevelLowThreshold) {
     alert = true;
     Serial.println("Canal level threshold exceeded!");
-  }
+  } 
 
   // Activate LEDs and buzzer based on alert status
   if (alert) {

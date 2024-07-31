@@ -115,7 +115,7 @@ function App() {
       <footer className="footer">
         <p>Bonuedie Ezra</p>
         <p>Boamah Samuel</p>
-        <p>© 2024 IoT Irrigation Dam Monitoring System</p>
+        <p>DESIGN AND IMPLEMENTATION OF AN IoT BASED REAL-TIME MONITORING AND EARLY WARNING SYSTEMS FOR IRRIGATION DAM</p>
       </footer>
     </div>
   );
