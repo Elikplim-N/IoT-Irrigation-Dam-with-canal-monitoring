@@ -34,7 +34,7 @@ function App() {
 
   useEffect(() => {
     getSensorValues();
-    const interval = setInterval(getSensorValues, 10000); // Update every 10 seconds
+    const interval = setInterval(getSensorValues, 2000); // Update every 10 seconds
     return () => clearInterval(interval); // Clear interval on component unmount
   }, []);
 
