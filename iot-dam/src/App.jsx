@@ -34,14 +34,14 @@ function App() {
 
   useEffect(() => {
     getSensorValues();
-    const interval = setInterval(getSensorValues, 2000); // Update every 10 seconds
+    const interval = setInterval(getSensorValues, 2000); // Update every 2 seconds
     return () => clearInterval(interval); // Clear interval on component unmount
   }, []);
 
   return (
     <div className="app">
       <div className="container">
-        <h1 className="text-center">Water Monitoring System</h1>
+        <h1 className="text-center">IoT Irrigation Dam Monitoring System </h1>
         <div className="row">
           {/* Temperature Sensor */}
           <div className="col-md-3">
