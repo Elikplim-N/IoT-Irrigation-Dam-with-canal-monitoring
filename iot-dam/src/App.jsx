@@ -7,6 +7,7 @@ function App() {
     turbidity: { value: null, unit: "NTU", icon: "turbidity", threshold: 3 },
     tankLevel: { value: null, unit: "%", icon: "water", maxThreshold: 95, minThreshold: 60 },
     canalLevel: { value: null, unit: "%", icon: "water", maxThreshold: 80, minThreshold: 60 },
+    soilMoisture: { value: null, unit: "", icon: "soil", threshold: 500 } // Added soil moisture sensor
   });
 
   const getSensorValues = async () => {
@@ -19,13 +20,15 @@ function App() {
         turbidity: data.find(sensor => sensor.id === "TB"),
         tankLevel: data.find(sensor => sensor.id === "TL"),
         canalLevel: data.find(sensor => sensor.id === "CL"),
+        soilMoisture: data.find(sensor => sensor.id === "SM") // Added soil moisture sensor
       };
 
       setSensorVals(prevState => ({
-        temperature: { ...prevState.temperature, value: sensorData.temperature.value.value },
-        turbidity: { ...prevState.turbidity, value: sensorData.turbidity.value.value },
-        tankLevel: { ...prevState.tankLevel, value: sensorData.tankLevel.value.value },
-        canalLevel: { ...prevState.canalLevel, value: sensorData.canalLevel.value.value },
+        temperature: { ...prevState.temperature, value: sensorData.temperature?.value.value },
+        turbidity: { ...prevState.turbidity, value: sensorData.turbidity?.value.value },
+        tankLevel: { ...prevState.tankLevel, value: sensorData.tankLevel?.value.value },
+        canalLevel: { ...prevState.canalLevel, value: sensorData.canalLevel?.value.value },
+        soilMoisture: { ...prevState.soilMoisture, value: sensorData.soilMoisture?.value.value } // Updated state
       }));
     } catch (error) {
       console.log(error);
@@ -34,7 +37,7 @@ function App() {
 
   useEffect(() => {
     getSensorValues();
-    const interval = setInterval(getSensorValues, 2000); // Update every 2 seconds
+    const interval = setInterval(getSensorValues, 200); // Update every 2 seconds
     return () => clearInterval(interval); // Clear interval on component unmount
   }, []);
 
@@ -58,10 +61,11 @@ function App() {
           <li>Min Threshold for canal = 60%</li>
           <li>Max Threshold for dam = 95%</li>
           <li>Min Threshold for dam = 60%</li>
+          <li>Soil Moisture Threshold = 500</li> {/* Added soil moisture threshold */}
         </ul>
         <div className="row">
           {/* Temperature Sensor */}
-          <div className="col-md-3">
+          <div className="col-md-2">
             <div className={`card ${checkThreshold(sensorVals.temperature) ? "bg-danger" : ""}`}>
               <div className="card-body">
                 <h2 className="card-title">Temperature</h2>
@@ -79,7 +83,7 @@ function App() {
           </div>
 
           {/* Turbidity Sensor */}
-          <div className="col-md-3">
+          <div className="col-md-2">
             <div className={`card ${checkThreshold(sensorVals.turbidity) ? "bg-danger" : ""}`}>
               <div className="card-body">
                 <h2 className="card-title">Turbidity</h2>
@@ -97,7 +101,7 @@ function App() {
           </div>
 
           {/* Tank Level Sensor */}
-          <div className="col-md-3">
+          <div className="col-md-2">
             <div className={`card ${checkThreshold(sensorVals.tankLevel, true) ? "bg-danger" : ""}`}>
               <div className="card-body">
                 <h2 className="card-title">Tank Level</h2>
@@ -115,7 +119,7 @@ function App() {
           </div>
 
           {/* Canal Level Sensor */}
-          <div className="col-md-3">
+          <div className="col-md-2">
             <div className={`card ${checkThreshold(sensorVals.canalLevel, true) ? "bg-danger" : ""}`}>
               <div className="card-body">
                 <h2 className="card-title">Canal Level</h2>
@@ -128,6 +132,24 @@ function App() {
                   <i className={`icon-${sensorVals.canalLevel.icon}`}></i>
                 </p>
                 {checkThreshold(sensorVals.canalLevel, true) && <p className="alert">Threshold breached!</p>}
+              </div>
+            </div>
+          </div>
+
+          {/* Soil Moisture Sensor */}
+          <div className="col-md-2">
+            <div className={`card ${checkThreshold(sensorVals.soilMoisture) ? "bg-danger" : ""}`}>
+              <div className="card-body">
+                <h2 className="card-title">Soil Moisture</h2>
+                <p className="card-text">
+                  {sensorVals.soilMoisture.value !== null
+                    ? `${sensorVals.soilMoisture.value} ${sensorVals.soilMoisture.unit}`
+                    : "---"}
+                </p>
+                <p className="card-subtext">
+                  <i className={`icon-${sensorVals.soilMoisture.icon}`}></i>
+                </p>
+                {checkThreshold(sensorVals.soilMoisture) && <p className="alert">Threshold breached!</p>}
               </div>
             </div>
           </div>
