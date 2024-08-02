@@ -7,7 +7,6 @@ function App() {
     turbidity: { value: null, unit: "NTU", icon: "turbidity", threshold: 3 },
     tankLevel: { value: null, unit: "%", icon: "water", maxThreshold: 95, minThreshold: 60 },
     canalLevel: { value: null, unit: "%", icon: "water", maxThreshold: 80, minThreshold: 60 },
-    moistLevel: { value: null, unit: "%", icon: "moist", maxThreshold: 80, minThreshold: 60 },
   });
 
   const getSensorValues = async () => {
@@ -20,7 +19,6 @@ function App() {
         turbidity: data.find(sensor => sensor.id === "TB"),
         tankLevel: data.find(sensor => sensor.id === "TL"),
         canalLevel: data.find(sensor => sensor.id === "CL"),
-        moistLevel: data.find(sensor => sensor.id === "SM"),
       };
 
       setSensorVals(prevState => ({
@@ -28,7 +26,6 @@ function App() {
         turbidity: { ...prevState.turbidity, value: sensorData.turbidity.value.value },
         tankLevel: { ...prevState.tankLevel, value: sensorData.tankLevel.value.value },
         canalLevel: { ...prevState.canalLevel, value: sensorData.canalLevel.value.value },
-        moistLevel: { ...prevState.moistLevel, value: sensorData.moistLevel.value.value },
       }));
     } catch (error) {
       console.log(error);
@@ -60,7 +57,7 @@ function App() {
           <li>Max Threshold for canal = 80%</li>
           <li>Min Threshold for canal = 60%</li>
           <li>Max Threshold for dam = 95%</li>
-          <li>Max Threshold for dam = 95%</li>
+          <li>Min Threshold for dam = 60%</li>
         </ul>
         <div className="row">
           {/* Temperature Sensor */}
@@ -136,23 +133,6 @@ function App() {
           </div>
         </div>
       </div>
-      {/* Moist Level Sensor */}
-      <div className="col-md-3">
-            <div className={`card ${checkThreshold(sensorVals.moistLevel, true) ? "bg-danger" : ""}`}>
-              <div className="card-body">
-                <h2 className="card-title">Tank Level</h2>
-                <p className="card-text">
-                  {sensorVals.moistLevel.value !== null
-                    ? `${sensorVals.moistLevel.value} ${sensorVals.moistLevel.unit}`
-                    : "---"}
-                </p>
-                <p className="card-subtext">
-                  <i className={`icon-${sensorVals.moistLevel.icon}`}></i>
-                </p>
-                {checkThreshold(sensorVals.moistLevel, true) && <p className="alert">Threshold breached!</p>}
-              </div>
-            </div>
-          </div>
       <footer className="footer">
         <p>Bonuedie Ezra</p>
         <p>Boamah Samuel</p>
