@@ -20,7 +20,7 @@ function App() {
         turbidity: data.find(sensor => sensor.id === "TB"),
         tankLevel: data.find(sensor => sensor.id === "TL"),
         canalLevel: data.find(sensor => sensor.id === "CL"),
-        canalLevel: data.find(sensor => sensor.id === "SM"),
+        moistLevel: data.find(sensor => sensor.id === "SM"),
       };
 
       setSensorVals(prevState => ({
