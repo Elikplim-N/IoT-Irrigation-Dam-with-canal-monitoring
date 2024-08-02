@@ -7,32 +7,29 @@ function App() {
     turbidity: { value: null, unit: "NTU", icon: "turbidity", threshold: 3 },
     tankLevel: { value: null, unit: "%", icon: "water", maxThreshold: 95, minThreshold: 60 },
     canalLevel: { value: null, unit: "%", icon: "water", maxThreshold: 80, minThreshold: 60 },
-    soilMoisture: { value: null, unit: "", icon: "soil", threshold: 500 }
+    soilMoisture: { value: null, unit: "%", icon: "soil", threshold: 30 } // Added soil moisture sensor
   });
 
   const getSensorValues = async () => {
     try {
       const response = await fetch("https://api.waziup.io/api/v2/devices/IoT_Dam/sensors");
       const data = await response.json();
-      console.log("API Response:", data);
 
       const sensorData = {
         temperature: data.find(sensor => sensor.id === "TC"),
         turbidity: data.find(sensor => sensor.id === "TB"),
         tankLevel: data.find(sensor => sensor.id === "TL"),
         canalLevel: data.find(sensor => sensor.id === "CL"),
-        soilMoisture: data.find(sensor => sensor.id === "SM")
+        soilMoisture: data.find(sensor => sensor.id === "SM"), // Added soil moisture sensor
       };
-      console.log("Sensor Data:", sensorData);
 
       setSensorVals(prevState => ({
-        temperature: { ...prevState.temperature, value: sensorData.temperature?.value.value },
-        turbidity: { ...prevState.turbidity, value: sensorData.turbidity?.value.value },
-        tankLevel: { ...prevState.tankLevel, value: sensorData.tankLevel?.value.value },
-        canalLevel: { ...prevState.canalLevel, value: sensorData.canalLevel?.value.value },
-        soilMoisture: { ...prevState.soilMoisture, value: sensorData.soilMoisture?.value.value }
+        temperature: { ...prevState.temperature, value: sensorData.temperature.value.value },
+        turbidity: { ...prevState.turbidity, value: sensorData.turbidity.value.value },
+        tankLevel: { ...prevState.tankLevel, value: sensorData.tankLevel.value.value },
+        canalLevel: { ...prevState.canalLevel, value: sensorData.canalLevel.value.value },
+        soilMoisture: { ...prevState.soilMoisture, value: sensorData.soilMoisture.value.value }, // Updated soil moisture sensor
       }));
-      console.log("Updated State:", sensorVals);
     } catch (error) {
       console.log(error);
     }
@@ -40,8 +37,8 @@ function App() {
 
   useEffect(() => {
     getSensorValues();
-    const interval = setInterval(getSensorValues, 2000);
-    return () => clearInterval(interval);
+    const interval = setInterval(getSensorValues, 2000); // Update every 2 seconds
+    return () => clearInterval(interval); // Clear interval on component unmount
   }, []);
 
   const checkThreshold = (sensor, isLevel = false) => {
@@ -64,11 +61,11 @@ function App() {
           <li>Min Threshold for canal = 60%</li>
           <li>Max Threshold for dam = 95%</li>
           <li>Min Threshold for dam = 60%</li>
-          <li>Soil Moisture Threshold = 500</li> {/* Added soil moisture threshold */}
+          <li>Threshold for soil moisture = 30%</li> {/* Added soil moisture threshold */}
         </ul>
         <div className="row">
           {/* Temperature Sensor */}
-          <div className="col-md-2">
+          <div className="col-md-3">
             <div className={`card ${checkThreshold(sensorVals.temperature) ? "bg-danger" : ""}`}>
               <div className="card-body">
                 <h2 className="card-title">Temperature</h2>
@@ -86,7 +83,7 @@ function App() {
           </div>
 
           {/* Turbidity Sensor */}
-          <div className="col-md-2">
+          <div className="col-md-3">
             <div className={`card ${checkThreshold(sensorVals.turbidity) ? "bg-danger" : ""}`}>
               <div className="card-body">
                 <h2 className="card-title">Turbidity</h2>
@@ -104,7 +101,7 @@ function App() {
           </div>
 
           {/* Tank Level Sensor */}
-          <div className="col-md-2">
+          <div className="col-md-3">
             <div className={`card ${checkThreshold(sensorVals.tankLevel, true) ? "bg-danger" : ""}`}>
               <div className="card-body">
                 <h2 className="card-title">Tank Level</h2>
@@ -122,7 +119,7 @@ function App() {
           </div>
 
           {/* Canal Level Sensor */}
-          <div className="col-md-2">
+          <div className="col-md-3">
             <div className={`card ${checkThreshold(sensorVals.canalLevel, true) ? "bg-danger" : ""}`}>
               <div className="card-body">
                 <h2 className="card-title">Canal Level</h2>
@@ -140,7 +137,7 @@ function App() {
           </div>
 
           {/* Soil Moisture Sensor */}
-          <div className="col-md-2">
+          <div className="col-md-3">
             <div className={`card ${checkThreshold(sensorVals.soilMoisture) ? "bg-danger" : ""}`}>
               <div className="card-body">
                 <h2 className="card-title">Soil Moisture</h2>
