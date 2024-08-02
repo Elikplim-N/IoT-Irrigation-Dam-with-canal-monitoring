@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 
 function App() {
   const [sensorVals, setSensorVals] = useState({
@@ -11,8 +11,10 @@ function App() {
     soilMoisture: { value: null, unit: "%", icon: "soil", threshold: 30 }
   });
 
+  const [error, setError] = useState(null);
+
   const getSensorValues = async () => {
-    const cachedData = sessionStorage.getItem('sensorData');
+    const cachedData = sessionStorage.getItem("sensorData");
     if (cachedData) {
       setSensorVals(JSON.parse(cachedData));
       return;
@@ -20,27 +22,31 @@ function App() {
 
     try {
       const response = await fetch("https://api.waziup.io/api/v2/devices/IoT_Dam/sensors");
+      if (!response.ok) {
+        throw new Error("Failed to fetch sensor data");
+      }
+
       const data = await response.json();
-      
-      sessionStorage.setItem('sensorData', JSON.stringify(data));
+      sessionStorage.setItem("sensorData", JSON.stringify(data));
 
       const sensorData = {
         temperature: data.find(sensor => sensor.id === "TC"),
         turbidity: data.find(sensor => sensor.id === "TB"),
         tankLevel: data.find(sensor => sensor.id === "TL"),
         canalLevel: data.find(sensor => sensor.id === "CL"),
-        soilMoisture: data.find(sensor => sensor.id === "SM"),
+        soilMoisture: data.find(sensor => sensor.id === "SM")
       };
 
       setSensorVals(prevState => ({
-        temperature: { ...prevState.temperature, value: sensorData.temperature.value.value },
-        turbidity: { ...prevState.turbidity, value: sensorData.turbidity.value.value },
-        tankLevel: { ...prevState.tankLevel, value: sensorData.tankLevel.value.value },
-        canalLevel: { ...prevState.canalLevel, value: sensorData.canalLevel.value.value },
-        soilMoisture: { ...prevState.soilMoisture, value: sensorData.soilMoisture.value.value },
+        temperature: { ...prevState.temperature, value: sensorData.temperature?.value?.value || "---" },
+        turbidity: { ...prevState.turbidity, value: sensorData.turbidity?.value?.value || "---" },
+        tankLevel: { ...prevState.tankLevel, value: sensorData.tankLevel?.value?.value || "---" },
+        canalLevel: { ...prevState.canalLevel, value: sensorData.canalLevel?.value?.value || "---" },
+        soilMoisture: { ...prevState.soilMoisture, value: sensorData.soilMoisture?.value?.value || "---" }
       }));
     } catch (error) {
       console.log(error);
+      setError("Error fetching sensor data");
     }
   };
 
@@ -50,7 +56,7 @@ function App() {
     debouncedGetSensorValues();
     const interval = setInterval(debouncedGetSensorValues, 10000); // Update every 10 seconds
     return () => clearInterval(interval); // Clear interval on component unmount
-  }, []);
+  }, [debouncedGetSensorValues]);
 
   const checkThreshold = (sensor, isLevel = false) => {
     if (isLevel) {
@@ -66,6 +72,7 @@ function App() {
     <div className="app">
       <div className="container">
         <h1 className="text-center">IoT Irrigation Dam Monitoring System</h1>
+        {error && <div className="alert alert-danger">{error}</div>}
         <ul className="text-center">
           <li>Threshold for turbidity = 3 NTU</li>
           <li>Max Threshold for canal = 80%</li>
