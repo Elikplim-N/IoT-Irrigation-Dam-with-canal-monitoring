@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { debounce } from 'lodash';
 
 function App() {
   const [sensorVals, setSensorVals] = useState({
@@ -8,28 +7,20 @@ function App() {
     turbidity: { value: null, unit: "NTU", icon: "turbidity", threshold: 3 },
     tankLevel: { value: null, unit: "%", icon: "water", maxThreshold: 95, minThreshold: 60 },
     canalLevel: { value: null, unit: "%", icon: "water", maxThreshold: 80, minThreshold: 60 },
-    soilMoisture: { value: null, unit: "%", icon: "soil", threshold: 30 }
+    moistLevel: { value: null, unit: "%", icon: "moist", maxThreshold: 80, minThreshold: 60 },
   });
 
   const getSensorValues = async () => {
-    const cachedData = sessionStorage.getItem('sensorData');
-    if (cachedData) {
-      setSensorVals(JSON.parse(cachedData));
-      return;
-    }
-
     try {
       const response = await fetch("https://api.waziup.io/api/v2/devices/IoT_Dam/sensors");
       const data = await response.json();
-      
-      sessionStorage.setItem('sensorData', JSON.stringify(data));
 
       const sensorData = {
         temperature: data.find(sensor => sensor.id === "TC"),
         turbidity: data.find(sensor => sensor.id === "TB"),
         tankLevel: data.find(sensor => sensor.id === "TL"),
         canalLevel: data.find(sensor => sensor.id === "CL"),
-        soilMoisture: data.find(sensor => sensor.id === "SM"),
+        canalLevel: data.find(sensor => sensor.id === "SM"),
       };
 
       setSensorVals(prevState => ({
@@ -37,31 +28,18 @@ function App() {
         turbidity: { ...prevState.turbidity, value: sensorData.turbidity.value.value },
         tankLevel: { ...prevState.tankLevel, value: sensorData.tankLevel.value.value },
         canalLevel: { ...prevState.canalLevel, value: sensorData.canalLevel.value.value },
-        soilMoisture: { ...prevState.soilMoisture, value: sensorData.soilMoisture.value.value },
+        moistLevel: { ...prevState.moistLevel, value: sensorData.moistLevel.value.value },
       }));
     } catch (error) {
       console.log(error);
     }
   };
 
-  const debouncedGetSensorValues = debounce(getSensorValues, 5000); // Debounce by 5 seconds
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch data from API
-        const response = await fetch("https://api.waziup.io/api/v2/devices/IoT_Dam/sensors");
-        const data = await response.json();
-        setSensorVals(processData(data)); // Process data as needed
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        // Handle error, e.g., show error message
-      }
-    };
-  
-    fetchData();
+    getSensorValues();
+    const interval = setInterval(getSensorValues, 2000); // Update every 2 seconds
+    return () => clearInterval(interval); // Clear interval on component unmount
   }, []);
-  
 
   const checkThreshold = (sensor, isLevel = false) => {
     if (isLevel) {
@@ -81,9 +59,8 @@ function App() {
           <li>Threshold for turbidity = 3 NTU</li>
           <li>Max Threshold for canal = 80%</li>
           <li>Min Threshold for canal = 60%</li>
-          <li>Max Threshold for tank = 95%</li>
-          <li>Min Threshold for tank = 60%</li>
-          <li>Threshold for soil moisture = 30%</li>
+          <li>Max Threshold for dam = 95%</li>
+          <li>Max Threshold for dam = 95%</li>
         </ul>
         <div className="row">
           {/* Temperature Sensor */}
@@ -157,26 +134,25 @@ function App() {
               </div>
             </div>
           </div>
-
-          {/* Soil Moisture Sensor */}
-          <div className="col-md-3">
-            <div className={`card ${checkThreshold(sensorVals.soilMoisture) ? "bg-danger" : ""}`}>
+        </div>
+      </div>
+      {/* Moist Level Sensor */}
+      <div className="col-md-3">
+            <div className={`card ${checkThreshold(sensorVals.moistLevel, true) ? "bg-danger" : ""}`}>
               <div className="card-body">
-                <h2 className="card-title">Soil Moisture</h2>
+                <h2 className="card-title">Tank Level</h2>
                 <p className="card-text">
-                  {sensorVals.soilMoisture.value !== null
-                    ? `${sensorVals.soilMoisture.value} ${sensorVals.soilMoisture.unit}`
+                  {sensorVals.moistLevel.value !== null
+                    ? `${sensorVals.moistLevel.value} ${sensorVals.moistLevel.unit}`
                     : "---"}
                 </p>
                 <p className="card-subtext">
-                  <i className={`icon-${sensorVals.soilMoisture.icon}`}></i>
+                  <i className={`icon-${sensorVals.moistLevel.icon}`}></i>
                 </p>
-                {checkThreshold(sensorVals.soilMoisture) && <p className="alert">Threshold breached!</p>}
+                {checkThreshold(sensorVals.moistLevel, true) && <p className="alert">Threshold breached!</p>}
               </div>
             </div>
           </div>
-        </div>
-      </div>
       <footer className="footer">
         <p>Bonuedie Ezra</p>
         <p>Boamah Samuel</p>
