@@ -116,11 +116,6 @@ function App() {
           </div>
         </div>
       </div>
-      <footer className="mt-4 text-center">
-        <p>Bonuedie Ezra</p>
-        <p>Boamah Samuel</p>
-        <p>DESIGN AND IMPLEMENTATION OF AN IoT BASED REAL-TIME MONITORING AND EARLY WARNING SYSTEMS FOR IRRIGATION DAM</p>
-      </footer>
     </div>
   );
 }
