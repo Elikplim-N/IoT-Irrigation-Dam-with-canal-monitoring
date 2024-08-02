@@ -47,10 +47,21 @@ function App() {
   const debouncedGetSensorValues = debounce(getSensorValues, 5000); // Debounce by 5 seconds
 
   useEffect(() => {
-    debouncedGetSensorValues();
-    const interval = setInterval(debouncedGetSensorValues, 10000); // Update every 10 seconds
-    return () => clearInterval(interval); // Clear interval on component unmount
+    const fetchData = async () => {
+      try {
+        // Fetch data from API
+        const response = await fetch("https://api.waziup.io/api/v2/devices/IoT_Dam/sensors");
+        const data = await response.json();
+        setSensorVals(processData(data)); // Process data as needed
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        // Handle error, e.g., show error message
+      }
+    };
+  
+    fetchData();
   }, []);
+  
 
   const checkThreshold = (sensor, isLevel = false) => {
     if (isLevel) {
