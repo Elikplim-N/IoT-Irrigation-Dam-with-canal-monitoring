@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { debounce } from "lodash";
 
 function App() {
   const [sensorVals, setSensorVals] = useState({
@@ -8,55 +7,41 @@ function App() {
     turbidity: { value: null, unit: "NTU", icon: "turbidity", threshold: 3 },
     tankLevel: { value: null, unit: "%", icon: "water", maxThreshold: 95, minThreshold: 60 },
     canalLevel: { value: null, unit: "%", icon: "water", maxThreshold: 80, minThreshold: 60 },
-    soilMoisture: { value: null, unit: "%", icon: "soil", threshold: 30 }
+    ph: { value: null, unit: "pH", icon: "ph", threshold: 7 },
+    humidity: { value: null, unit: "%", icon: "humidity", threshold: 60 }
   });
 
-  const [error, setError] = useState(null);
-
   const getSensorValues = async () => {
-    const cachedData = sessionStorage.getItem("sensorData");
-    if (cachedData) {
-      setSensorVals(JSON.parse(cachedData));
-      return;
-    }
-
     try {
       const response = await fetch("https://api.waziup.io/api/v2/devices/IoT_Dam/sensors");
-      if (!response.ok) {
-        throw new Error("Failed to fetch sensor data");
-      }
-
       const data = await response.json();
-      sessionStorage.setItem("sensorData", JSON.stringify(data));
+      console.log(data);
 
       const sensorData = {
         temperature: data.find(sensor => sensor.id === "TC"),
         turbidity: data.find(sensor => sensor.id === "TB"),
         tankLevel: data.find(sensor => sensor.id === "TL"),
         canalLevel: data.find(sensor => sensor.id === "CL"),
-        soilMoisture: data.find(sensor => sensor.id === "SM")
+        humidity: data.find(sensor => sensor.id === "SM")
       };
 
       setSensorVals(prevState => ({
-        temperature: { ...prevState.temperature, value: sensorData.temperature?.value?.value || "---" },
-        turbidity: { ...prevState.turbidity, value: sensorData.turbidity?.value?.value || "---" },
-        tankLevel: { ...prevState.tankLevel, value: sensorData.tankLevel?.value?.value || "---" },
-        canalLevel: { ...prevState.canalLevel, value: sensorData.canalLevel?.value?.value || "---" },
-        soilMoisture: { ...prevState.soilMoisture, value: sensorData.soilMoisture?.value?.value || "---" }
+        temperature: { ...prevState.temperature, value: sensorData.temperature.value.value },
+        turbidity: { ...prevState.turbidity, value: sensorData.turbidity.value.value },
+        tankLevel: { ...prevState.tankLevel, value: sensorData.tankLevel.value.value },
+        canalLevel: { ...prevState.canalLevel, value: sensorData.canalLevel.value.value },
+        humidity: { ...prevState.humidity, value: sensorData.humidity.value.value }
       }));
     } catch (error) {
       console.log(error);
-      setError("Error fetching sensor data");
     }
   };
 
-  const debouncedGetSensorValues = debounce(getSensorValues, 5000); // Debounce by 5 seconds
-
   useEffect(() => {
-    debouncedGetSensorValues();
-    const interval = setInterval(debouncedGetSensorValues, 10000); // Update every 10 seconds
+    getSensorValues();
+    const interval = setInterval(getSensorValues, 2000); // Update every 2 seconds
     return () => clearInterval(interval); // Clear interval on component unmount
-  }, [debouncedGetSensorValues]);
+  }, []);
 
   const checkThreshold = (sensor, isLevel = false) => {
     if (isLevel) {
@@ -72,18 +57,16 @@ function App() {
     <div className="app">
       <div className="container">
         <h1 className="text-center">IoT Irrigation Dam Monitoring System</h1>
-        {error && <div className="alert alert-danger">{error}</div>}
         <ul className="text-center">
           <li>Threshold for turbidity = 3 NTU</li>
           <li>Max Threshold for canal = 80%</li>
           <li>Min Threshold for canal = 60%</li>
-          <li>Max Threshold for tank = 95%</li>
-          <li>Min Threshold for tank = 60%</li>
-          <li>Threshold for soil moisture = 30%</li>
+          <li>Max Threshold for dam = 95%</li>
+          <li>Min Threshold for dam = 60%</li>
         </ul>
         <div className="row">
           {/* Temperature Sensor */}
-          <div className="col-md-3">
+          <div className="col-md-2">
             <div className={`card ${checkThreshold(sensorVals.temperature) ? "bg-danger" : ""}`}>
               <div className="card-body">
                 <h2 className="card-title">Temperature</h2>
@@ -101,7 +84,7 @@ function App() {
           </div>
 
           {/* Turbidity Sensor */}
-          <div className="col-md-3">
+          <div className="col-md-2">
             <div className={`card ${checkThreshold(sensorVals.turbidity) ? "bg-danger" : ""}`}>
               <div className="card-body">
                 <h2 className="card-title">Turbidity</h2>
@@ -119,7 +102,7 @@ function App() {
           </div>
 
           {/* Tank Level Sensor */}
-          <div className="col-md-3">
+          <div className="col-md-2">
             <div className={`card ${checkThreshold(sensorVals.tankLevel, true) ? "bg-danger" : ""}`}>
               <div className="card-body">
                 <h2 className="card-title">Tank Level</h2>
@@ -137,7 +120,7 @@ function App() {
           </div>
 
           {/* Canal Level Sensor */}
-          <div className="col-md-3">
+          <div className="col-md-2">
             <div className={`card ${checkThreshold(sensorVals.canalLevel, true) ? "bg-danger" : ""}`}>
               <div className="card-body">
                 <h2 className="card-title">Canal Level</h2>
@@ -154,20 +137,20 @@ function App() {
             </div>
           </div>
 
-          {/* Soil Moisture Sensor */}
-          <div className="col-md-3">
-            <div className={`card ${checkThreshold(sensorVals.soilMoisture) ? "bg-danger" : ""}`}>
+          {/* Humidity Sensor */}
+          <div className="col-md-2">
+            <div className={`card ${checkThreshold(sensorVals.humidity) ? "bg-danger" : ""}`}>
               <div className="card-body">
-                <h2 className="card-title">Soil Moisture</h2>
+                <h2 className="card-title">Humidity</h2>
                 <p className="card-text">
-                  {sensorVals.soilMoisture.value !== null
-                    ? `${sensorVals.soilMoisture.value} ${sensorVals.soilMoisture.unit}`
+                  {sensorVals.humidity.value !== null
+                    ? `${sensorVals.humidity.value} ${sensorVals.humidity.unit}`
                     : "---"}
                 </p>
                 <p className="card-subtext">
-                  <i className={`icon-${sensorVals.soilMoisture.icon}`}></i>
+                  <i className={`icon-${sensorVals.humidity.icon}`}></i>
                 </p>
-                {checkThreshold(sensorVals.soilMoisture) && <p className="alert">Threshold breached!</p>}
+                {checkThreshold(sensorVals.humidity) && <p className="alert">Threshold breached!</p>}
               </div>
             </div>
           </div>
