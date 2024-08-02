@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./App.css";
+// import "./App.css";
 
 function App() {
   const [sensorVals, setSensorVals] = useState({
@@ -56,7 +56,7 @@ function App() {
   return (
     <div className="app">
       <div className="container">
-        <h1 className="text-center">IoT Irrigation Dam Monitoring System</h1>
+        <h5 className="text-xl text-center">IoT Irrigation Dam Monitoring System</h5>
         <ul className="text-center">
           <li>Threshold for turbidity = 3 NTU</li>
           <li>Max Threshold for canal = 80%</li>
