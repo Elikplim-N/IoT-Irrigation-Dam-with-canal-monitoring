@@ -7,29 +7,32 @@ function App() {
     turbidity: { value: null, unit: "NTU", icon: "turbidity", threshold: 3 },
     tankLevel: { value: null, unit: "%", icon: "water", maxThreshold: 95, minThreshold: 60 },
     canalLevel: { value: null, unit: "%", icon: "water", maxThreshold: 80, minThreshold: 60 },
-    soilMoisture: { value: null, unit: "", icon: "soil", threshold: 500 } // Added soil moisture sensor
+    soilMoisture: { value: null, unit: "", icon: "soil", threshold: 500 }
   });
 
   const getSensorValues = async () => {
     try {
       const response = await fetch("https://api.waziup.io/api/v2/devices/IoT_Dam/sensors");
       const data = await response.json();
+      console.log("API Response:", data);
 
       const sensorData = {
         temperature: data.find(sensor => sensor.id === "TC"),
         turbidity: data.find(sensor => sensor.id === "TB"),
         tankLevel: data.find(sensor => sensor.id === "TL"),
         canalLevel: data.find(sensor => sensor.id === "CL"),
-        soilMoisture: data.find(sensor => sensor.id === "SM") // Added soil moisture sensor
+        soilMoisture: data.find(sensor => sensor.id === "SM")
       };
+      console.log("Sensor Data:", sensorData);
 
       setSensorVals(prevState => ({
         temperature: { ...prevState.temperature, value: sensorData.temperature?.value.value },
         turbidity: { ...prevState.turbidity, value: sensorData.turbidity?.value.value },
         tankLevel: { ...prevState.tankLevel, value: sensorData.tankLevel?.value.value },
         canalLevel: { ...prevState.canalLevel, value: sensorData.canalLevel?.value.value },
-        soilMoisture: { ...prevState.soilMoisture, value: sensorData.soilMoisture?.value.value } // Updated state
+        soilMoisture: { ...prevState.soilMoisture, value: sensorData.soilMoisture?.value.value }
       }));
+      console.log("Updated State:", sensorVals);
     } catch (error) {
       console.log(error);
     }
@@ -37,8 +40,8 @@ function App() {
 
   useEffect(() => {
     getSensorValues();
-    const interval = setInterval(getSensorValues, 2000); // Update every 2 seconds
-    return () => clearInterval(interval); // Clear interval on component unmount
+    const interval = setInterval(getSensorValues, 2000);
+    return () => clearInterval(interval);
   }, []);
 
   const checkThreshold = (sensor, isLevel = false) => {
