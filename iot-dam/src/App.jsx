@@ -114,6 +114,16 @@ function App() {
               {checkThreshold(sensorVals.humidity) && <p className="mt-2 text-sm">Threshold breached!</p>}
             </div>
           </div>
+
+          {/* Soil moisture Sensor */}
+          <div className={`p-4 border rounded ${checkThreshold(sensorVals.canalLevel, true) ? "bg-red-500 text-white" : "bg-white"}`}>
+            <div className="text-center">
+              <h3 className="text-lg font-bold">Soil Moisture Level</h3>
+              <p className="text-2xl">{sensorVals.canalLevel.value !== null ? `${sensorVals.canalLevel.value} ${sensorVals.canalLevel.unit}` : "---"}</p>
+              <p className="text-sm"><i className={`icon-${sensorVals.canalLevel.icon}`}></i></p>
+              {checkThreshold(sensorVals.canalLevel, true) && <p className="mt-2 text-sm">Threshold breached!</p>}
+            </div>
+          </div>
         </div>
       </div>
     </div>

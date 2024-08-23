@@ -1,6 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* index.css */
+
+.footer {
+  background-color: #333;
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.footer .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer .col-md-12 {
+  flex-basis: 100%;
+  padding: 20px;
+}
+
+.copyright {
+  background-color: #444;
+  color: #fff;
+  padding: 10px 0;
+  text-align: center;
+  clear: both;
+}
 
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
