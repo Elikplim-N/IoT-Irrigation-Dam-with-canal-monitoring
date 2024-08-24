@@ -83,8 +83,7 @@ h1 {
 .icon-temperature::before { content: "🌡️"; }
 .icon-turbidity::before { content: "💧"; }
 .icon-water::before { content: "💦"; }
-.icon-humidity::before { content: "💧"; }
-.icon-soilMoisture::before { content: "🌱"; } /* New Icon for Soil Moisture */
+.icon-humidity::before { content: "🌱"; }
 
 .footer {
   background-color: #343a40;
@@ -112,3 +111,6 @@ h1 {
   padding: 5px 10px;
   border-radius: 4px;
 }
+
+
+
