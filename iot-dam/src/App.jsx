@@ -55,7 +55,7 @@ function App() {
     <div className="app">
       <div className="container">
         <h1 className="text-center text-primary mb-4">IoT Irrigation Dam Monitoring System</h1>
-        <ol className="text-center mb-4">
+        <ol className="text-center mb-4" >
           <li>Threshold for turbidity = 3 NTU</li>
           <li>Max Threshold for canal = 80%</li>
           <li>Min Threshold for canal = 60%</li>
