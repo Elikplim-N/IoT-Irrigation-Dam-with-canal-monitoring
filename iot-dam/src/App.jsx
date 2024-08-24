@@ -108,7 +108,7 @@ function App() {
           {/* Humidity Sensor */}
           <div className={`p-4 border rounded ${checkThreshold(sensorVals.humidity) ? "bg-red-500 text-white" : "bg-white"}`}>
             <div className="text-center">
-              <h3 className="text-lg font-bold">Humidity</h3>
+              <h3 className="text-lg font-bold">Soil Humidity</h3>
               <p className="text-2xl">{sensorVals.humidity.value !== null ? `${sensorVals.humidity.value} ${sensorVals.humidity.unit}` : "---"}</p>
               <p className="text-sm"><i className={`icon-${sensorVals.humidity.icon}`}></i></p>
               {checkThreshold(sensorVals.humidity) && <p className="mt-2 text-sm">Threshold breached!</p>}
