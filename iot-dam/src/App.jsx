@@ -6,7 +6,7 @@ function App() {
     turbidity: { value: null, unit: "NTU", icon: "turbidity", threshold: 3 },
     tankLevel: { value: null, unit: "%", icon: "water", maxThreshold: 95, minThreshold: 60 },
     canalLevel: { value: null, unit: "%", icon: "water", maxThreshold: 80, minThreshold: 60 },
-    humidity: { value: null, unit: "%", icon: "humidity", threshold: 60 }
+    humidity: { value: null, unit: "%", icon: "Soil humidity", threshold: 60 }
   });
 
   const getSensorValues = async () => {
