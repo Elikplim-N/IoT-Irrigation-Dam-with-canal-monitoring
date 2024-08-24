@@ -52,11 +52,9 @@ function App() {
   };
 
   return (
-    <div className="lg:flex lg:items-center lg:justify-between p-4">
-      <div className="min-w-0 flex-1">
-        <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight mb-4">
-          IoT Irrigation Dam Monitoring System
-        </h2>
+    <div className="app">
+      <div className="container">
+        <h1 className="text-center text-primary mb-4">IoT Irrigation Dam Monitoring System</h1>
         <ul className="text-center mb-4">
           <li>Threshold for turbidity = 3 NTU</li>
           <li>Max Threshold for canal = 80%</li>
@@ -64,68 +62,29 @@ function App() {
           <li>Max Threshold for dam = 95%</li>
           <li>Min Threshold for dam = 60%</li>
         </ul>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {/* Temperature Sensor */}
-          <div className={`p-4 border rounded ${checkThreshold(sensorVals.temperature) ? "bg-red-500 text-white" : "bg-white"}`}>
-            <div className="text-center">
-              <h3 className="text-lg font-bold">Temperature</h3>
-              <p className="text-2xl">{sensorVals.temperature.value !== null ? `${sensorVals.temperature.value} ${sensorVals.temperature.unit}` : "---"}</p>
-              <p className="text-sm"><i className={`icon-${sensorVals.temperature.icon}`}></i></p>
-              {checkThreshold(sensorVals.temperature) && <p className="mt-2 text-sm">Threshold breached!</p>}
-            </div>
-          </div>
-
-          {/* Turbidity Sensor */}
-          <div className={`p-4 border rounded ${checkThreshold(sensorVals.turbidity) ? "bg-red-500 text-white" : "bg-white"}`}>
-            <div className="text-center">
-              <h3 className="text-lg font-bold">Turbidity</h3>
-              <p className="text-2xl">{sensorVals.turbidity.value !== null ? `${sensorVals.turbidity.value} ${sensorVals.turbidity.unit}` : "---"}</p>
-              <p className="text-sm"><i className={`icon-${sensorVals.turbidity.icon}`}></i></p>
-              {checkThreshold(sensorVals.turbidity) && <p className="mt-2 text-sm">Threshold breached!</p>}
-            </div>
-          </div>
-
-          {/* Tank Level Sensor */}
-          <div className="block rounded-lg bg-white p-6 text-surface shadow-secondary-1 dark:bg-surface-dark dark:text-white" >
-            <div className="text-center">
-              <h3 className="text-lg font-bold">Tank Level</h3>
-              <p className="text-2xl">{sensorVals.tankLevel.value !== null ? `${sensorVals.tankLevel.value} ${sensorVals.tankLevel.unit}` : "---"}</p>
-              <p className="text-sm"><i className={`icon-${sensorVals.tankLevel.icon}`}></i></p>
-              {checkThreshold(sensorVals.tankLevel, true) && <p className="mt-2 text-sm">Threshold breached!</p>}
-            </div>
-          </div>
-
-          {/* Canal Level Sensor */}
-          <div className={`p-4 border rounded ${checkThreshold(sensorVals.canalLevel, true) ? "bg-red-500 text-white" : "bg-white"}`}>
-            <div className="text-center">
-              <h3 className="text-lg font-bold">Canal Level</h3>
-              <p className="text-2xl">{sensorVals.canalLevel.value !== null ? `${sensorVals.canalLevel.value} ${sensorVals.canalLevel.unit}` : "---"}</p>
-              <p className="text-sm"><i className={`icon-${sensorVals.canalLevel.icon}`}></i></p>
-              {checkThreshold(sensorVals.canalLevel, true) && <p className="mt-2 text-sm">Threshold breached!</p>}
-            </div>
-          </div>
-
-          {/* Humidity Sensor */}
-          <div className={`p-4 border rounded ${checkThreshold(sensorVals.humidity) ? "bg-red-500 text-white" : "bg-white"}`}>
-            <div className="text-center">
-              <h3 className="text-lg font-bold">Humidity</h3>
-              <p className="text-2xl">{sensorVals.humidity.value !== null ? `${sensorVals.humidity.value} ${sensorVals.humidity.unit}` : "---"}</p>
-              <p className="text-sm"><i className={`icon-${sensorVals.humidity.icon}`}></i></p>
-              {checkThreshold(sensorVals.humidity) && <p className="mt-2 text-sm">Threshold breached!</p>}
-            </div>
-          </div>
-
-          {/* Soil moisture Sensor */}
-          <div className={`p-4 border rounded ${checkThreshold(sensorVals.canalLevel, true) ? "bg-red-500 text-white" : "bg-white"}`}>
-            <div className="text-center">
-              <h3 className="text-lg font-bold">Soil Moisture Level</h3>
-              <p className="text-2xl">{sensorVals.canalLevel.value !== null ? `${sensorVals.canalLevel.value} ${sensorVals.canalLevel.unit}` : "---"}</p>
-              <p className="text-sm"><i className={`icon-${sensorVals.canalLevel.icon}`}></i></p>
-              {checkThreshold(sensorVals.canalLevel, true) && <p className="mt-2 text-sm">Threshold breached!</p>}
-            </div>
-          </div>
+        <div className="row">
+          {Object.keys(sensorVals).map((sensorKey) => {
+            const sensor = sensorVals[sensorKey];
+            const isLevelSensor = sensorKey === "tankLevel" || sensorKey === "canalLevel";
+            const alertClass = checkThreshold(sensor, isLevelSensor) ? "bg-danger" : "";
+            return (
+              <div key={sensorKey} className="col-md-3">
+                <div className={`card ${alertClass}`}>
+                  <div className="card-body">
+                    <h3 className="card-title">{sensorKey.charAt(0).toUpperCase() + sensorKey.slice(1)}</h3>
+                    <p className="card-text">{sensor.value !== null ? `${sensor.value} ${sensor.unit}` : "---"}</p>
+                    <p className="card-subtext"><i className={`icon-${sensor.icon}`}></i></p>
+                    {checkThreshold(sensor, isLevelSensor) && <p className="alert">Threshold breached!</p>}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
+      <footer className="footer">
+        <p>&copy; 2024 IoT Irrigation Dam Monitoring System</p>
+      </footer>
     </div>
   );
 }
