@@ -6,7 +6,8 @@ function App() {
     turbidity: { value: null, unit: "NTU", icon: "turbidity", threshold: 3 },
     tankLevel: { value: null, unit: "%", icon: "water", maxThreshold: 95, minThreshold: 60 },
     canalLevel: { value: null, unit: "%", icon: "water", maxThreshold: 80, minThreshold: 60 },
-    humidity: { value: null, unit: "%", icon: "humidity", threshold: 60 }
+    humidity: { value: null, unit: "%", icon: "humidity", threshold: 60 },
+    soilMoisture: { value: null, unit: "%", icon: "soilMoisture", threshold: 40 } // New Sensor
   });
 
   const getSensorValues = async () => {
@@ -20,7 +21,8 @@ function App() {
         turbidity: data.find(sensor => sensor.id === "TB"),
         tankLevel: data.find(sensor => sensor.id === "TL"),
         canalLevel: data.find(sensor => sensor.id === "CL"),
-        humidity: data.find(sensor => sensor.id === "SM")
+        humidity: data.find(sensor => sensor.id === "SM"),
+        soilMoisture: data.find(sensor => sensor.id === "SoilMoisture") // Fetch Soil Moisture sensor data
       };
 
       setSensorVals(prevState => ({
@@ -28,7 +30,8 @@ function App() {
         turbidity: { ...prevState.turbidity, value: sensorData.turbidity.value.value },
         tankLevel: { ...prevState.tankLevel, value: sensorData.tankLevel.value.value },
         canalLevel: { ...prevState.canalLevel, value: sensorData.canalLevel.value.value },
-        humidity: { ...prevState.humidity, value: sensorData.humidity.value.value }
+        humidity: { ...prevState.humidity, value: sensorData.humidity.value.value },
+        soilMoisture: { ...prevState.soilMoisture, value: sensorData.soilMoisture.value.value } // Update Soil Moisture
       }));
     } catch (error) {
       console.log(error);
@@ -61,6 +64,7 @@ function App() {
           <li>Min Threshold for canal = 60%</li>
           <li>Max Threshold for dam = 95%</li>
           <li>Min Threshold for dam = 60%</li>
+          <li>Threshold for soil moisture = 40%</li>
         </ul>
         <div className="row">
           {Object.keys(sensorVals).map((sensorKey) => {
