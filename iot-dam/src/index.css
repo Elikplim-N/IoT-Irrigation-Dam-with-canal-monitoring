@@ -3,37 +3,120 @@
 @tailwind utilities;
 /* index.css */
 
-.footer {
-  background-color: #333;
-  color: #fff;
-  padding: 20px 0;
+body {
+  margin: 0;
+  font-family: "Roboto", Arial, sans-serif;
+  background-color: #f8f9fa;
+  color: #343a40;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  flex: 1;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.text-center {
   text-align: center;
 }
 
-.footer .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+h1 {
+  font-size: 2.5rem;
+  font-weight: bold;
 }
 
-.footer .row {
+.text-primary {
+  color: #007bff;
+}
+
+.row {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
 }
 
-.footer .col-md-12 {
-  flex-basis: 100%;
-  padding: 20px;
+.col-md-3 {
+  flex: 1 1 22%;
+  margin: 10px;
 }
 
-.copyright {
-  background-color: #444;
-  color: #fff;
-  padding: 10px 0;
-  text-align: center;
-  clear: both;
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
 }
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-body {
+  padding: 20px;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: #343a40;
+}
+
+.card-text {
+  font-size: 1.25rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.card-subtext {
+  font-size: 1rem;
+  color: #6c757d;
+}
+
+.icon-temperature::before { content: "🌡️"; }
+.icon-turbidity::before { content: "💧"; }
+.icon-water::before { content: "💦"; }
+.icon-humidity::before { content: "💧"; }
+
+.footer {
+  background-color: #343a40;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+.footer p {
+  margin: 5px;
+}
+
+.bg-danger {
+  background-color: #dc3545 !important;
+  color: white;
+}
+
+.alert {
+  font-weight: bold;
+  color: #fff;
+  background-color: #dc3545;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
 
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
