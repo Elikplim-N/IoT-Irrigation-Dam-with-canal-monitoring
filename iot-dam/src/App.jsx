@@ -53,7 +53,7 @@ function App() {
 
   return (
     <div className="app">
-      <h2> </h2>
+      <h2> IoT Irrigation Dam  Monitoring System</h2>
       <div className="container">
         <h1 className="text-center text-primary mb-4">IoT Irrigation Dam Monitoring System</h1>
         <ol className="text-center mb-4" >
