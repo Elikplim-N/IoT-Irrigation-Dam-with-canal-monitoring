@@ -6,7 +6,7 @@ function App() {
     turbidity: { value: null, unit: "NTU", icon: "turbidity", threshold: 3 },
     tankLevel: { value: null, unit: "%", icon: "water", maxThreshold: 95, minThreshold: 60 },
     canalLevel: { value: null, unit: "%", icon: "water", maxThreshold: 80, minThreshold: 60 },
-    humidity: { value: null, unit: "%", icon: "humidity", threshold: 60 }
+    humidity: { value: null, unit: "%", icon: "humidity", threshold: 40 }
   });
 
   const getSensorValues = async () => {
@@ -55,13 +55,13 @@ function App() {
     <div className="app">
       <div className="container">
         <h1 className="text-center text-primary mb-4">IoT Irrigation Dam Monitoring System</h1>
-        <ul className="text-center mb-4">
+        <ol className="text-center mb-4">
           <li>Threshold for turbidity = 3 NTU</li>
           <li>Max Threshold for canal = 80%</li>
           <li>Min Threshold for canal = 60%</li>
           <li>Max Threshold for dam = 95%</li>
           <li>Min Threshold for dam = 60%</li>
-        </ul>
+        </ol>
         <div className="row">
           {Object.keys(sensorVals).map((sensorKey) => {
             const sensor = sensorVals[sensorKey];
@@ -71,7 +71,6 @@ function App() {
               <div key={sensorKey} className="col-md-3">
                 <div className={`card ${alertClass}`}>
                   <div className="card-body">
-                    <h3 className="card-title">{sensorKey.charAt(0).toUpperCase() + sensorKey.slice(1)}</h3>
                     <h3 className="card-title">{sensorKey === "humidity" ? "Soil Moisture" : sensorKey.charAt(0).toUpperCase() + sensorKey.slice(1)}</h3>
                     <p className="card-text">{sensor.value !== null ? `${sensor.value} ${sensor.unit}` : "---"}</p>
                     <p className="card-subtext"><i className={`icon-${sensor.icon}`}></i></p>
@@ -84,7 +83,7 @@ function App() {
         </div>
       </div>
       <footer className="footer">
-        <p>&copy; 2024 IoT Irrigation Dam Monitoring System</p>
+        <p>&copy; 2024 IoT Irrigation Dam  Monitoring System</p>
       </footer>
     </div>
   );
